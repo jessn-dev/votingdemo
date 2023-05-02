@@ -1,4 +1,4 @@
-# Connecting to Cloud SQL - Postgres
+# Simple Voting App Connecting to Cloud SQL - Postgres
 
 ## Before you begin
 
