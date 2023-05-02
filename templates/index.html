@@ -1,10 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Felxion Demo</title>
-  </head>
-  <body>
-    <h1>Hello, World!</h1>
-  </body>
-</html>
+{% extends 'base.html' %} {% block content %}
+
+<div class="container text-center">
+  <div class="card text-bg-warning mb-3">
+    <div class="card-body">
+      <h5 class="card-title">
+        {% if apple_count == android_count %} APPLE and ANDROID are evenly
+        matched! {% elif apple_count > android_count %} APPLE is winning by
+        {{apple_count - android_count}} {{'votes' if apple_count - android_count
+        > 1 else 'vote'}}! {% elif android_count > apple_count %} ANDROID is
+        winning by {{android_count - apple_count}} {{'votes' if android_count -
+        apple_count > 1 else 'vote'}}! {% endif %}
+      </h5>
+    </div>
+  </div>
+  <br /><br />
+  <div class="row justify-content-center">
+    <div class="col-4">
+      <div class="card" style="width: 18rem">
+        <div class="card-header">{{apple_count}} Votes</div>
+        <ul class="list-group list-group-flush">
+          <button id="voteApple" class="btn btn-secondary">
+            Vote for Apple
+          </button>
+        </ul>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card" style="width: 18rem">
+        <div class="card-header">{{android_count}} Votes</div>
+        <ul class="list-group list-group-flush">
+          <button id="voteAndroid" class="btn btn-success">
+            Vote for Android
+          </button>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <br /><br />
+  <div class="card">
+    <div class="card-header">Tracker</div>
+    <div class="card-body">
+      <h5 class="card-title">Recent Votes</h5>
+      <p class="card-text"></p>
+      {% for vote in recent_votes %} {% if vote.candidate == "APPLE" %} {% elif
+      vote.candidate == "ANDROID" %} {% endif %}
+      <span class="title"> A vote for <b>{{vote.candidate}}</b> </span>
+      <p>was cast at {{vote.time_cast}}</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+  function vote(team) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4) {
+        window.location.reload();
+      }
+    };
+    xhr.open("POST", "/votes", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.send("team=" + team);
+  }
+
+  document.getElementById("voteApple").addEventListener("click", function () {
+    vote("APPLE");
+  });
+  document.getElementById("voteAndroid").addEventListener("click", function () {
+    vote("ANDROID");
+  });
+</script>
+{% endblock %}
